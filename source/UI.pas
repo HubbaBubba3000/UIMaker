@@ -10,11 +10,11 @@ type typeUX = class
     
     procedure changeColor;
     begin
-      listobj.Last.Color:=rgb(r.value,g.Value,b.value);
+      if not md and isobj then curobj.Color:=rgb(r.value,g.Value,b.value);
     end;
     procedure changePos;
     begin
-      listobj.Last.Center:=pnt(curx.Value,cury.value);
+      if not md and isobj then curobj.Center:=pnt(curx.Value,cury.value);
     end;
     
     procedure _menu;
@@ -38,10 +38,12 @@ type typeUX = class
     begin
       initwindow;
       _menu;
+      onmousemove+= (x,y:real;mb:integer) -> if md and isobj then updateUI;
+      //----------
       leftpanel(180,rgb($30,$3b,$4f));
       //
       r := Slider('red: ',0,255,255,5);
-      r.Enabled:=listobj.Count<>0;
+      r.ValueChanged:=changecolor;
       r.FontSize:=14;
       //
       g := Slider('green: ',0,255,255,5);
@@ -60,18 +62,28 @@ type typeUX = class
       cury.ValueChanged:=changepos;
       cury.FontSize:=14;
       //
-      rot := integerbox('angle',0,600);
+      rot := integerbox('angle',0,360);
+      rot.ValueChanged:= procedure -> curobj.RotateAngle:=rot.Value;
       rot.FontSize:=14;
       //
       textbox := controls.textbox('text');
+      textbox.ValueChanged:= procedure -> curobj.Text:=textbox.Text;
       textbox.FontSize:=14;
-      //
+      //---------------
       mousestatus:= statusbar;
       mousestatus.FontSize:=14;
-      
     end;
 
-   
+    procedure updateUI;
+    begin
+      r.Value:=curobj.Color.R;
+      g.Value:=curobj.Color.g;
+      b.Value:=curobj.Color.b;
+      curx.Value:=curobj.Center.X.Round;
+      cury.Value:=curobj.Center.y.Round;
+      rot.Value:=curobj.RotateAngle.Round;
+      textbox.Text:=curobj.Text;
+    end;
 end;
 
 begin end.
