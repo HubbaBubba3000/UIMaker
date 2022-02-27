@@ -4,9 +4,9 @@ uses controls,wpfobjects,base;
 type typeUX = class
   private
     r,g,b:sliderwpf;
-    curx,cury,rot:integerboxwpf;
+    curx,cury,rot,curw,curh:integerboxwpf;
     textbox:textboxwpf;
-    mousestatus:statusbarwpf;
+    status:statusbarwpf;
     
     procedure changeColor;
     begin
@@ -16,7 +16,10 @@ type typeUX = class
     begin
       if not md and isobj then curobj.Center:=pnt(curx.Value,cury.value);
     end;
-    
+    procedure changesize;
+    begin
+      if not md and isobj then (curobj.Width,curobj.Height):=(curw.Value,curh.Value);
+    end;
     procedure _menu;
     begin
       var m := menu;
@@ -38,7 +41,7 @@ type typeUX = class
     begin
       initwindow;
       _menu;
-      onmousemove+= (x,y:real;mb:integer) -> if md and isobj then updateUI;
+      onmousemove+= (x,y:real;mb:integer) -> if (md and isobj)or kd then updateUI;
       //----------
       leftpanel(180,rgb($30,$3b,$4f));
       //
@@ -62,6 +65,14 @@ type typeUX = class
       cury.ValueChanged:=changepos;
       cury.FontSize:=14;
       //
+      curw := integerbox('width',0,800);
+      curw.ValueChanged:=changesize;
+      curw.FontSize:=14;
+      //
+      curh := integerbox('height',0,600);
+      curh.ValueChanged:=changesize;
+      curh.FontSize:=14;
+      //
       rot := integerbox('angle',0,360);
       rot.ValueChanged:= procedure -> curobj.RotateAngle:=rot.Value;
       rot.FontSize:=14;
@@ -70,8 +81,8 @@ type typeUX = class
       textbox.ValueChanged:= procedure -> curobj.Text:=textbox.Text;
       textbox.FontSize:=14;
       //---------------
-      mousestatus:= statusbar;
-      mousestatus.FontSize:=14;
+      status:= statusbar;
+      status.FontSize:=14;
     end;
 
     procedure updateUI;
@@ -81,8 +92,11 @@ type typeUX = class
       b.Value:=curobj.Color.b;
       curx.Value:=curobj.Center.X.Round;
       cury.Value:=curobj.Center.y.Round;
+      curw.Value:=curobj.Width.Round;
+      curh.Value:=curobj.Height.Round;
       rot.Value:=curobj.RotateAngle.Round;
       textbox.Text:=curobj.Text;
+      status.Text:=curobj.gettype.ToString.Remove(0,11) + $' ({curindex})';
     end;
 end;
 
