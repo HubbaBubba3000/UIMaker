@@ -1,5 +1,5 @@
 ﻿unit UI;
-uses controls,wpfobjects,base;
+uses controls,wpfobjects,base, filemanager;
 
 type typeUX = class
   private
@@ -7,7 +7,6 @@ type typeUX = class
     curx,cury,rot,curw,curh:integerboxwpf;
     textbox:textboxwpf;
     status:statusbarwpf;
-    
     procedure changeColor;
     begin
       if not md and isobj then curobj.Color:=rgb(r.value,g.Value,b.value);
@@ -28,7 +27,7 @@ type typeUX = class
       m[1].AddRange('rectangle', 'text', 'picture', 'roundrect', 'ellipse');
       m[1][0].Click := procedure -> listobj.Add(new RectangleWPF(0,0, 100, 100, cldef));
       m[1][1].Click := procedure -> listobj.Add(new TextWPF(0,0, 'TEXT', cldef));
-      //m[1][2].Click := procedure -> listobj.Add(new PictureWPF(0,0, ofname('picture|*.png')));
+      m[1][2].Click := procedure -> listobj.Add(new PictureWPF(0,0, ofname('picture|*.png')));
       m[1][3].Click := procedure -> listobj.Add(new RoundRectWPF(0,0, 100, 100, 30, cldef));
       m[1][4].Click := procedure -> listobj.Add(new EllipseWPF(0,0, 30, 30, cldef));
       m[2].AddRange('moving', 'scaling', 'rotating');
@@ -41,7 +40,8 @@ type typeUX = class
     begin
       initwindow;
       _menu;
-      onmousemove+= (x,y:real;mb:integer) -> if (md and isobj)or kd then updateUI;
+      onmousemove += (x,y:real;mb:integer) -> if isobj and md then updateUI;
+      onkeydown   += (k:key) -> if isobj then updateUI;
       //----------
       leftpanel(180,rgb($30,$3b,$4f));
       //

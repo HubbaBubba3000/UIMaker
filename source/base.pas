@@ -11,7 +11,7 @@ var
   state: typestate;
   rotatebuf:real;
   curindex: integer;
-  md,kd:boolean; //mousedown
+  md:boolean; //mousedown
   
 function inrect(r: grect): boolean := m.X.Between(r.Left, r.Right) and m.Y.Between(r.Top, r.Bottom);
 function curobj := listobj.ElementAt(curindex);
@@ -19,16 +19,10 @@ function isobj := curindex>=0;// current object is enable
 
 procedure keydown(k:key);
 begin
-  kd:=true;
   case k of
-    key.i:if curindex<listobj.Count then curindex+=1;
+    key.i:if curindex<listobj.Count-1 then curindex+=1;
     key.k:if curindex>0 then curindex-=1;
-   // key.T:  writeln();
   end;
-end;
-procedure keyup(k:key);
-begin
-  kd:=false;
 end;
 
 procedure mousemove(x,y:real;mb:integer);
@@ -65,13 +59,12 @@ begin
   listobj := new List<objectwpf>;
   curindex:=-1;
   //
-  onkeydown:=keydown;
-  onkeyup:=keyup;
+  onkeydown+=keydown;
   onmousemove+=mousemove;
   onmousedown+=mousedown;
   onmouseup+=(x,y:real;mb:integer) -> (md:=false);
   //--DEBUG---
-  writeln(curindex,' ',md);
+  
 end;
 
 begin end.
