@@ -7,6 +7,7 @@ type typeUX = class
     curx,cury,rot,curw,curh:integerboxwpf;
     textbox:textboxwpf;
     status:statusbarwpf;
+    curobjIm:picturewpf;
     procedure changeColor;
     begin
       if not md and isobj then curobj.Color:=rgb(r.value,g.Value,b.value);
@@ -87,6 +88,7 @@ type typeUX = class
 
     procedure updateUI;
     begin
+      updateIm;
       r.Value:=curobj.Color.R;
       g.Value:=curobj.Color.g;
       b.Value:=curobj.Color.b;
