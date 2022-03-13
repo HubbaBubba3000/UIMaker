@@ -10,7 +10,10 @@ type typeUX = class
     curobjIm:picturewpf;
     procedure changeColor;
     begin
-      if not md and isobj then curobj.Color:=rgb(r.value,g.Value,b.value);
+      if not md then begin 
+        if isobj then curobj.Color:=rgb(r.value,g.Value,b.value)
+        else p.bg.color := rgb(r.value,g.Value,b.value);
+      end;
     end;
     procedure changePos;
     begin
@@ -25,6 +28,7 @@ type typeUX = class
       var m := menu;
       m.AddRange('file', 'create', 'state');
       m[0].AddRange('open project','save project', 'save');
+      m[0][0].Click := procedure -> (p:=openproj(ofname('UIMaker''s projects |*.uims')));
       m[1].AddRange('rectangle', 'text', 'picture', 'roundrect', 'ellipse');
       m[1][0].Click := procedure -> listobj.Add(new RectangleWPF(0,0, 100, 100, cldef));
       m[1][1].Click := procedure -> listobj.Add(new TextWPF(0,0, 'TEXT', cldef));
@@ -35,6 +39,7 @@ type typeUX = class
       m[2][0].Click := procedure -> (state := move);
       m[2][1].Click := procedure -> (state := scale);
       m[2][2].Click := procedure -> (state := rotate);
+      m.Height.Println;
     end;
   public 
     constructor;
@@ -84,6 +89,9 @@ type typeUX = class
       //---------------
       status:= statusbar;
       status.FontSize:=14;
+      //
+      window.Title:='UIMaker v 0.0.3 alpha - ';
+      p:=openproj('C:\Users\ttcom\Documents\UIMaker\source\save.uims');
     end;
 
     procedure updateUI;
